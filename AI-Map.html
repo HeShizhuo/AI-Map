@@ -293,6 +293,9 @@ function initMap() {
 function addMarkers() {
     culturalSites.forEach(site => {
         const point = new BMapGL.Point(site.location.lng, site.location.lat);
+        const marker = new BMapGL.Marker(point, {
+            enableHighAccuracy: true // 启用高精度模式
+        });
         
         // 创建标注
         const marker = new BMapGL.Marker(point);
