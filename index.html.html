@@ -8,425 +8,75 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=X0m8PibfjI6CMfpgMyNc6vXrQrVivfXQ"></script>
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-        #map-container {
-            height: 100vh;
-            width: 100%;
-            z-index: 1;
-            position: relative;
-        }
-        .custom-label {
-            display: inline-flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 6px;
-            padding: 3px 8px;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-            border-left: 3px solid;
-            cursor: pointer;
-        }
-        .category-badge {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 6px;
-            color: #fff;
-            font-size: 10px;
-        }
-        .floating-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            width: 280px;
-        }
-        .story-line {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 12px;
-            padding: 25px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            display: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        .story-line.active {
-            display: block;
-        }
-        .close-story {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 18px;
-            cursor: pointer;
-            color: #777;
-        }
-        .close-story:hover {
-            color: #333;
-        }
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .header-bar {
-            background: linear-gradient(135deg, #1a56db 0%, #1e40af 100%);
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .logo {
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 15px;
-            font-size: 0.9rem;
-        }
-        @media (max-width: 768px) {
-            .floating-panel {
-                width: 85%;
-                left: 50%;
-                transform: translateX(-50%);
-                top: 70px;
-                padding: 15px;
-            }
-            .nav-links {
-                display: none;
-            }
-        }
+        html, body {height:100%;margin:0;padding:0;overflow:hidden;}
+        #map-container {height:100vh;width:100%;z-index:1;position:relative;}
+        .custom-label{display:inline-flex;align-items:center;background:rgba(255,255,255,0.95);border-radius:6px;padding:3px 8px;font-size:12px;box-shadow:0 2px 5px rgba(0,0,0,0.15);white-space:nowrap;border-left:3px solid;}
+        .category-badge{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-right:6px;color:#fff;font-size:10px;}
+        .floating-panel{position:absolute;top:20px;left:20px;z-index:1000;background:rgba(255,255,255,0.9);border-radius:12px;padding:20px;max-height:calc(100vh - 40px);overflow-y:auto;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+        .story-line{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:rgba(255,255,255,0.95);border-radius:12px;padding:25px;max-width:500px;display:none;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+        .story-line.active{display:block;}
     </style>
 </head>
 <body>
-    <div class="header-bar">
-        <div class="logo">石家庄文化地图</div>
-        <div class="nav-links">
-            <a href="#">首页</a>
-            <a href="#">关于</a>
-            <a href="#">联系方式</a>
-        </div>
+<div id="map-container"></div>
+<div class="floating-panel w-72">
+    <h1 class="text-xl font-bold mb-3">石家庄学术·伦理·法治</h1>
+    <div class="category-filter mb-4">
+        <h2 class="font-semibold mb-2">维度筛选</h2>
+        <label class="block"><input type="checkbox" class="category-checkbox" value="morality" checked> 道德文化传承</label>
+        <label class="block"><input type="checkbox" class="category-checkbox" value="rule" checked> 法治建设实践</label>
+        <label class="block"><input type="checkbox" class="category-checkbox" value="values" checked> 核心价值观践行</label>
+        <label class="block"><input type="checkbox" class="category-checkbox" value="culture" checked> 特色文化传承</label>
     </div>
-    
-    <div id="map-container"></div>
-    
-    <div class="loading-overlay" id="loading-overlay">
-        <div class="spinner"></div>
-        <p>地图加载中...</p>
+    <div class="mt-4">
+        <button id="story-btn" class="w-full bg-blue-600 text-white py-2 px-4 rounded">开启故事线</button>
     </div>
-    
-    <div class="floating-panel">
-        <h1 class="text-xl font-bold mb-3">石家庄学术·伦理·法治</h1>
-        <div class="category-filter mb-4">
-            <h2 class="font-semibold mb-2">维度筛选</h2>
-            <label class="block mb-2"><input type="checkbox" class="category-checkbox mr-2" value="morality" checked> 道德文化传承</label>
-            <label class="block mb-2"><input type="checkbox" class="category-checkbox mr-2" value="rule" checked> 法治建设实践</label>
-            <label class="block mb-2"><input type="checkbox" class="category-checkbox mr-2" value="values" checked> 核心价值观践行</label>
-            <label class="block"><input type="checkbox" class="category-checkbox mr-2" value="culture" checked> 特色文化传承</label>
-        </div>
-        <div class="mt-4">
-            <button id="story-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-200">
-                开启故事线之旅
-            </button>
-        </div>
-        <div class="mt-4 text-xs text-gray-500">
-            <p>探索石家庄的文化、历史与法治建设成就</p>
-        </div>
+</div>
+<div class="story-line" id="story-line">
+    <span class="close-story text-gray-500 cursor-pointer">✖</span>
+    <h2 class="text-xl font-bold mb-3" id="story-title"></h2>
+    <div class="progress-bar h-1 bg-gray-200 mb-2"><div class="progress h-1 bg-blue-600" id="story-progress"></div></div>
+    <div id="story-content" class="mb-3"></div>
+    <div class="flex justify-between">
+        <button id="prev-story" class="bg-gray-200 px-3 py-1 rounded">上一站</button>
+        <button id="next-story" class="bg-blue-600 text-white px-3 py-1 rounded">下一站</button>
     </div>
-    
-    <div class="story-line" id="story-line">
-        <span class="close-story" id="close-story">✖</span>
-        <h2 class="text-xl font-bold mb-3" id="story-title"></h2>
-        <div class="progress-bar h-2 bg-gray-200 rounded-full mb-4">
-            <div class="progress h-2 bg-blue-600 rounded-full" id="story-progress"></div>
-        </div>
-        <div id="story-content" class="mb-4"></div>
-        <div class="flex justify-between">
-            <button id="prev-story" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition duration-200">上一站</button>
-            <span id="story-counter" class="py-2 text-gray-600"></span>
-            <button id="next-story" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200">下一站</button>
-        </div>
-    </div>
+</div>
 
-    <script>
-    // 数据点定义
-    const points = [
-        {id:1,name:"石家庄市博物馆",category:"morality",categoryName:"道德文化传承",location:{lat:38.0569,lng:114.4899},address:"河北省石家庄市桥西区中华大街四中路3号",description:"石家庄市博物馆是展示地方历史文化的重要窗口。",image:"https://img1.imgtp.com/2025/01/01/shijiazhuang-museum.jpg",interpretation:"石家庄市博物馆通过展览展示石家庄的历史文化。",storyOrder:1,storyDescription:"第一站我们来到石家庄市博物馆，这里展示了石家庄从古至今的发展历程和文化传承，是了解石家庄历史文化的重要窗口。"},
-        {id:2,name:"石家庄解放纪念碑",category:"values",categoryName:"核心价值观践行",location:{lat:38.0413,lng:114.4785},address:"河北省石家庄市长安区中山东路",description:"石家庄解放纪念碑建于1948年。",image:"https://img1.imgtp.com/2025/01/01/shijiazhuang-monument.jpg",interpretation:"解放纪念碑见证了石家庄的红色历史。",storyOrder:2,storyDescription:"第二站我们来到解放纪念碑，这座纪念碑见证了石家庄的解放历史，是进行爱国主义教育和革命传统教育的重要场所。"},
-        {id:3,name:"河北博物院",category:"culture",categoryName:"特色文化传承",location:{lat:38.0503,lng:114.5143},address:"河北省石家庄市长安区东大街4号",description:"河北博物院是河北省最大的综合性博物馆。",image:"https://img1.imgtp.com/2025/01/01/hebei-museum.jpg",interpretation:"河北博物院是石家庄的文化地标。",storyOrder:3,storyDescription:"第三站我们来到河北博物院，这里收藏了大量珍贵文物，展示了河北地区丰富的历史文化遗产，是石家庄的文化地标。"},
-        {id:4,name:"正定古城",category:"culture",categoryName:"特色文化传承",location:{lat:38.1478,lng:114.5690},address:"河北省石家庄市正定县",description:"正定古城是国家历史文化名城。",image:"https://img1.imgtp.com/2025/01/01/zhengding.jpg",interpretation:"正定古城展现了石家庄悠久的历史。",storyOrder:4,storyDescription:"我们的旅程继续来到正定古城，这里保存了大量历史建筑和文化遗迹，展现了石家庄悠久的历史和丰富的文化底蕴。"},
-        {id:5,name:"西柏坡纪念馆",category:"values",categoryName:"核心价值观践行",location:{lat:38.3485,lng:113.9275},address:"河北省石家庄市平山县西柏坡镇",description:"全国爱国主义教育示范基地。",image:"https://img1.imgtp.com/2025/01/01/xibaipo.jpg",interpretation:"记录中共中央在西柏坡的革命历史。",storyOrder:5,storyDescription:"第五站我们来到西柏坡纪念馆，这里曾是中共中央所在地，见证了新中国诞生前的重要历史时刻，是进行革命传统教育的重要基地。"},
-        {id:6,name:"石家庄烈士陵园",category:"values",categoryName:"核心价值观践行",location:{lat:38.0623,lng:114.5110},address:"河北省石家庄市长安区",description:"缅怀革命烈士的纪念地。",image:"https://img1.imgtp.com/2025/01/01/lie-shi.jpg",interpretation:"是青少年接受爱国主义教育的重要场所。",storyOrder:6,storyDescription:"第六站我们来到石家庄烈士陵园，这里安息着为革命事业献身的烈士们，是缅怀先烈、进行爱国主义教育的重要场所。"},
-        {id:7,name:"河北师范大学",category:"morality",categoryName:"道德文化传承",location:{lat:38.0149,lng:114.5299},address:"河北省石家庄市裕华区",description:"河北省重点高校。",image:"https://img1.imgtp.com/2025/01/01/hebei-normal.jpg",interpretation:"长期开展文明校园和价值观教育。",storyOrder:7,storyDescription:"第七站我们来到河北师范大学，这所百年学府不仅培养了大量教育人才，还长期开展文明校园和社会主义核心价值观教育，为社会输送德才兼备的人才。"},
-        {id:8,name:"赵州桥",category:"culture",categoryName:"特色文化传承",location:{lat:37.7511,lng:114.7774},address:"河北省石家庄市赵县",description:"赵州桥建于隋朝。",image:"https://img1.imgtp.com/2025/01/01/zhaozhouqiao.jpg",interpretation:"赵州桥是古代桥梁建筑的杰出代表。",storyOrder:8,storyDescription:"最后一站我们来到赵州桥，这座建于隋代的古桥是中国古代桥梁建筑的杰出代表，体现了古代劳动人民的智慧和技艺，为我们的石家庄之旅画上圆满句号。"},
-        {id:9,name:"石家庄市中级人民法院",category:"rule",categoryName:"法治建设实践",location:{lat:38.0328,lng:114.5081},address:"河北省石家庄市桥西区友谊南大街",description:"石家庄市中级人民法院是维护社会公平正义的重要机构。",image:"https://img1.imgtp.com/2025/01/01/shijiazhuang-court.jpg",interpretation:"石家庄市中院在推进法治建设方面发挥了重要作用。",storyOrder:null},
-        {id:10,name:"长安公园",category:"morality",categoryName:"道德文化传承",location:{lat:38.0611,lng:114.5145},address:"河北省石家庄市长安区",description:"市区内大型公益性公园，常举办志愿服务和文明实践活动。",image:"https://img1.imgtp.com/2025/01/01/changan-park.jpg",interpretation:"体现了城市文明建设。",storyOrder:null},
-        {id:11,name:"元氏龙泉寺塔",category:"culture",categoryName:"特色文化传承",location:{lat:37.7592,lng:114.5129},address:"河北省石家庄市元氏县",description:"始建于隋代的重要古代佛教遗存。",image:"https://img1.imgtp.com/2025/01/01/longquansi.jpg",interpretation:"展示佛教文化传承。",storyOrder:null},
-        {id:12,name:"裕西公园",category:"values",categoryName:"核心价值观践行",location:{lat:38.0421,lng:114.4548},address:"河北省石家庄市桥西区",description:"市民休闲娱乐的重要公共空间。",image:"https://img1.imgtp.com/2025/01/01/yuxi-park.jpg",interpretation:"体现绿色发展理念。",storyOrder:null}
-    ];
+<script>
+const points=[
+ {id:1,name:"石家庄市博物馆",category:"morality",categoryName:"道德文化传承",location:{lat:38.0569,lng:114.4899},address:"河北省石家庄市桥西区中华大街四中路3号",description:"石家庄市博物馆是展示地方历史文化的重要窗口。",image:"https://img1.imgtp.com/2025/01/01/shijiazhuang-museum.jpg",interpretation:"石家庄市博物馆通过展览展示石家庄的历史文化。",storyOrder:1,storyDescription:"第一站我们来到石家庄市博物馆。"},
+ {id:2,name:"石家庄解放纪念碑",category:"values",categoryName:"核心价值观践行",location:{lat:38.0413,lng:114.4785},address:"河北省石家庄市长安区中山东路",description:"石家庄解放纪念碑建于1948年。",image:"https://img1.imgtp.com/2025/01/01/shijiazhuang-monument.jpg",interpretation:"解放纪念碑见证了石家庄的红色历史。",storyOrder:2,storyDescription:"第二站我们来到解放纪念碑。"},
+ {id:3,name:"河北博物院",category:"culture",categoryName:"特色文化传承",location:{lat:38.0503,lng:114.5143},address:"河北省石家庄市长安区东大街4号",description:"河北博物院是河北省最大的综合性博物馆。",image:"https://img1.imgtp.com/2025/01/01/hebei-museum.jpg",interpretation:"河北博物院是石家庄的文化地标。",storyOrder:3,storyDescription:"第三站我们来到河北博物院。"},
+ {id:4,name:"正定古城",category:"culture",categoryName:"特色文化传承",location:{lat:38.1478,lng:114.5690},address:"河北省石家庄市正定县",description:"正定古城是国家历史文化名城。",image:"https://img1.imgtp.com/2025/01/01/zhengding.jpg",interpretation:"正定古城展现了石家庄悠久的历史。",storyOrder:4,storyDescription:"我们的旅程继续来到正定古城。"},
+ {id:5,name:"西柏坡纪念馆",category:"values",categoryName:"核心价值观践行",location:{lat:38.3485,lng:113.9275},address:"河北省石家庄市平山县西柏坡镇",description:"全国爱国主义教育示范基地。",image:"https://img1.imgtp.com/2025/01/01/xibaipo.jpg",interpretation:"记录中共中央在西柏坡的革命历史。",storyOrder:5,storyDescription:"第五站我们来到西柏坡纪念馆。"},
+ {id:6,name:"石家庄烈士陵园",category:"values",categoryName:"核心价值观践行",location:{lat:38.0623,lng:114.5110},address:"河北省石家庄市长安区",description:"缅怀革命烈士的纪念地。",image:"https://img1.imgtp.com/2025/01/01/lie-shi.jpg",interpretation:"是青少年接受爱国主义教育的重要场所。",storyOrder:6,storyDescription:"第六站我们来到石家庄烈士陵园。"},
+ {id:7,name:"河北师范大学",category:"morality",categoryName:"道德文化传承",location:{lat:38.0149,lng:114.5299},address:"河北省石家庄市裕华区",description:"河北省重点高校。",image:"https://img1.imgtp.com/2025/01/01/hebei-normal.jpg",interpretation:"长期开展文明校园和价值观教育。",storyOrder:7,storyDescription:"第七站我们来到河北师范大学。"},
+ {id:8,name:"赵州桥",category:"culture",categoryName:"特色文化传承",location:{lat:37.7511,lng:114.7774},address:"河北省石家庄市赵县",description:"赵州桥建于隋朝。",image:"https://img1.imgtp.com/2025/01/01/zhaozhouqiao.jpg",interpretation:"赵州桥是古代桥梁建筑的杰出代表。",storyOrder:8,storyDescription:"最后一站我们来到赵州桥，结束石家庄之旅。"},
+ {id:9,name:"石家庄市中级人民法院",category:"rule",categoryName:"法治建设实践",location:{lat:38.0328,lng:114.5081},address:"河北省石家庄市桥西区友谊南大街",description:"石家庄市中级人民法院是维护社会公平正义的重要机构。",image:"https://img1.imgtp.com/2025/01/01/shijiazhuang-court.jpg",interpretation:"石家庄市中院在推进法治建设方面发挥了重要作用。",storyOrder:null},
+ {id:10,name:"长安公园",category:"morality",categoryName:"道德文化传承",location:{lat:38.0611,lng:114.5145},address:"河北省石家庄市长安区",description:"市区内大型公益性公园，常举办志愿服务和文明实践活动。",image:"https://img1.imgtp.com/2025/01/01/changan-park.jpg",interpretation:"体现了城市文明建设。",storyOrder:null},
+ {id:11,name:"元氏龙泉寺塔",category:"culture",categoryName:"特色文化传承",location:{lat:37.7592,lng:114.5129},address:"河北省石家庄市元氏县",description:"始建于隋代的重要古代佛教遗存。",image:"https://img1.imgtp.com/2025/01/01/longquansi.jpg",interpretation:"展示佛教文化传承。",storyOrder:null},
+ {id:12,name:"裕西公园",category:"values",categoryName:"核心价值观践行",location:{lat:38.0421,lng:114.4548},address:"河北省石家庄市桥西区",description:"市民休闲娱乐的重要公共空间。",image:"https://img1.imgtp.com/2025/01/01/yuxi-park.jpg",interpretation:"体现绿色发展理念。",storyOrder:null}
+];
 
-    const categoryColors = {
-        morality: '#92400e',
-        rule: '#1e40af',
-        values: '#b91c1c',
-        culture: '#065f46'
-    };
-    
-    const categoryIcons = {
-        morality: 'fa-heart',
-        rule: 'fa-gavel',
-        values: 'fa-star',
-        culture: 'fa-university'
-    };
-    
-    let map, markers = {}, labels = {};
-    let currentStoryIndex = 0;
-    const storyPoints = points.filter(p => p.storyOrder !== null).sort((a, b) => a.storyOrder - b.storyOrder);
+const categoryColors={morality:'#92400e',rule:'#1e40af',values:'#b91c1c',culture:'#065f46'};
+const categoryIcons={morality:'fa-heart',rule:'fa-gavel',values:'fa-star',culture:'fa-university'};
+let map,markers={},labels={};
 
-    // 初始化地图
-    function initMap() {
-        // 隐藏加载界面
-        document.getElementById('loading-overlay').style.display = 'none';
-        
-        map = new BMapGL.Map("map-container");
-        map.centerAndZoom(new BMapGL.Point(114.5149, 38.0423), 12);
-        map.enableScrollWheelZoom(true);
-        
-        // 添加地图控件
-        map.addControl(new BMapGL.NavigationControl());
-        map.addControl(new BMapGL.ScaleControl());
-        map.addControl(new BMapGL.OverviewMapControl());
-        
-        // 创建标记
-        createMarkers();
-        
-        // 添加地图加载完成事件
-        map.addEventListener('tilesloaded', function() {
-            console.log('地图加载完成');
-        });
-    }
+function initMap(){map=new BMapGL.Map("map-container");map.centerAndZoom(new BMapGL.Point(114.5149,38.0423),12);map.enableScrollWheelZoom(true);createMarkers();}
+function createMarkers(){points.forEach(p=>{const marker=new BMapGL.Marker(new BMapGL.Point(p.location.lng,p.location.lat));const iconColor=categoryColors[p.category];const labelContent=`<div class=\"custom-label\" style=\"border-left-color:${iconColor}\"><span class=\"category-badge\" style=\"background:${iconColor}\"><i class=\"fa ${categoryIcons[p.category]}\"></i></span>${p.name}</div>`;const label=new BMapGL.Label(labelContent,{offset:new BMapGL.Size(-80,40),position:new BMapGL.Point(p.location.lng,p.location.lat)});label.setStyle({border:"none",padding:"0",margin:"0",zIndex:"100"});marker.addEventListener('click',()=>showInfo(p));label.addEventListener('click',()=>showInfo(p));map.addOverlay(marker);map.addOverlay(label);markers[p.id]=marker;labels[p.id]=label;});}
+function showInfo(p){const content=`<div style='max-width:350px'><img src=\"${p.image}\" style='width:100%;height:180px;object-fit:cover;border-radius:8px 8px 0 0'><div style='padding:10px'><h3 style='font-weight:bold'>${p.name}</h3><p>${p.description}</p><p style='color:gray;font-size:12px'>${p.address}</p></div></div>`;const infoWindow=new BMapGL.InfoWindow(content,{width:350,height:300,title:p.name});map.openInfoWindow(infoWindow,new BMapGL.Point(p.location.lng,p.location.lat));}
 
-    // 创建标记
-    function createMarkers() {
-        points.forEach(p => {
-            const point = new BMapGL.Point(p.location.lng, p.location.lat);
-            const marker = new BMapGL.Marker(point);
-            
-            const iconColor = categoryColors[p.category];
-            const labelContent = `
-                <div class="custom-label" style="border-left-color: ${iconColor}">
-                    <span class="category-badge" style="background: ${iconColor}">
-                        <i class="fa ${categoryIcons[p.category]}"></i>
-                    </span>
-                    ${p.name}
-                </div>
-            `;
-            
-            const label = new BMapGL.Label(labelContent, {
-                offset: new BMapGL.Size(-80, 40),
-                position: point
-            });
-            
-            label.setStyle({
-                border: "none",
-                padding: "0",
-                margin: "0",
-                zIndex: "100"
-            });
-            
-            marker.addEventListener('click', () => showInfo(p));
-            label.addEventListener('click', () => showInfo(p));
-            
-            map.addOverlay(marker);
-            map.addOverlay(label);
-            
-            markers[p.id] = marker;
-            labels[p.id] = label;
-        });
-    }
+document.querySelectorAll('.category-checkbox').forEach(cb=>{cb.addEventListener('change',()=>{const cat=cb.value;const checked=cb.checked;points.forEach(p=>{if(p.category===cat){if(checked){map.addOverlay(markers[p.id]);map.addOverlay(labels[p.id]);}else{map.removeOverlay(markers[p.id]);map.removeOverlay(labels[p.id]);}}});});});
 
-    // 显示信息窗口
-    function showInfo(p) {
-        const content = `
-            <div style='max-width:350px'>
-                
-                <div style='padding:10px'>
-                    <h3 style='font-weight:bold;margin-bottom:8px'>${p.name}</h3>
-                    <p style='margin-bottom:8px;color:#555'>${p.description}</p>
-                    <div style='display:flex;align-items:center;margin-bottom:8px'>
-                        <span class="category-badge" style="background: ${categoryColors[p.category]};margin-right:8px">
-                            <i class="fa ${categoryIcons[p.category]}"></i>
-                        </span>
-                        <span>${p.categoryName}</span>
-                    </div>
-                    <p style='color:gray;font-size:12px'>${p.address}</p>
-                </div>
-            </div>
-        `;
-        
-        const infoWindow = new BMapGL.InfoWindow(content, {
-            width: 350,
-            height: 300,
-            title: p.name
-        });
-        
-        map.openInfoWindow(infoWindow, new BMapGL.Point(p.location.lng, p.location.lat));
-    }
+let currentStoryIndex=0;const storyPoints=points.filter(p=>p.storyOrder!==null).sort((a,b)=>a.storyOrder-b.storyOrder);
+document.getElementById('story-btn').addEventListener('click',()=>{document.getElementById('story-line').classList.add('active');showStoryPoint(0)});
+document.querySelector('.close-story').addEventListener('click',()=>{document.getElementById('story-line').classList.remove('active')});
+document.getElementById('prev-story').addEventListener('click',()=>{if(currentStoryIndex>0)showStoryPoint(currentStoryIndex-1)});
+document.getElementById('next-story').addEventListener('click',()=>{if(currentStoryIndex<storyPoints.length-1)showStoryPoint(currentStoryIndex+1)});
+function showStoryPoint(i){currentStoryIndex=i;const p=storyPoints[i];document.getElementById('story-title').textContent=p.name;document.getElementById('story-content').innerHTML=`<img src='${p.image}' class='w-full h-48 object-cover rounded mb-2'><p>${p.storyDescription}</p><p class='text-sm text-gray-600'>${p.address}</p>`;document.getElementById('story-progress').style.width=((i+1)/storyPoints.length*100)+"%";map.centerAndZoom(new BMapGL.Point(p.location.lng,p.location.lat),15);}
 
-    // 显示故事点
-    function showStoryPoint(i) {
-        currentStoryIndex = i;
-        const p = storyPoints[i];
-        
-        document.getElementById('story-title').textContent = p.name;
-        document.getElementById('story-content').innerHTML = `
-            
-            <p class="mb-3">${p.storyDescription}</p>
-            <p class="text-sm text-gray-600">${p.address}</p>
-        `;
-        
-        document.getElementById('story-progress').style.width = ((i + 1) / storyPoints.length * 100) + "%";
-        document.getElementById('story-counter').textContent = `${i + 1} / ${storyPoints.length}`;
-        
-        map.centerAndZoom(new BMapGL.Point(p.location.lng, p.location.lat), 15);
-        
-        // 高亮当前故事点的标记
-        Object.values(markers).forEach(marker => {
-            marker.setZIndex(0);
-        });
-        
-        if (markers[p.id]) {
-            markers[p.id].setZIndex(100);
-        }
-    }
-
-    // 事件监听器设置
-    function setupEventListeners() {
-        // 类别筛选
-        document.querySelectorAll('.category-checkbox').forEach(cb => {
-            cb.addEventListener('change', () => {
-                const cat = cb.value;
-                const checked = cb.checked;
-                
-                points.forEach(p => {
-                    if (p.category === cat) {
-                        if (checked) {
-                            map.addOverlay(markers[p.id]);
-                            map.addOverlay(labels[p.id]);
-                        } else {
-                            map.removeOverlay(markers[p.id]);
-                            map.removeOverlay(labels[p.id]);
-                        }
-                    }
-                });
-            });
-        });
-        
-        // 故事线按钮
-        document.getElementById('story-btn').addEventListener('click', () => {
-            document.getElementById('story-line').classList.add('active');
-            showStoryPoint(0);
-        });
-        
-        // 关闭故事线
-        document.getElementById('close-story').addEventListener('click', () => {
-            document.getElementById('story-line').classList.remove('active');
-        });
-        
-        // 上一站
-        document.getElementById('prev-story').addEventListener('click', () => {
-            if (currentStoryIndex > 0) {
-                showStoryPoint(currentStoryIndex - 1);
-            }
-        });
-        
-        // 下一站
-        document.getElementById('next-story').addEventListener('click', () => {
-            if (currentStoryIndex < storyPoints.length - 1) {
-                showStoryPoint(currentStoryIndex + 1);
-            }
-        });
-        
-        // 地图加载错误处理
-        window.addEventListener('error', function(e) {
-            const loadingOverlay = document.getElementById('loading-overlay');
-            loadingOverlay.innerHTML = `
-                <div class="text-red-600 text-center">
-                    <i class="fa fa-exclamation-triangle fa-3x mb-3"></i>
-                    <p>地图加载失败，请刷新页面重试</p>
-                    <button onclick="window.location.reload()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">刷新页面</button>
-                </div>
-            `;
-        });
-    }
-
-    // 页面加载完成后初始化
-    window.onload = function() {
-        // 设置事件监听器
-        setupEventListeners();
-        
-        // 初始化地图
-        try {
-            initMap();
-        } catch (error) {
-            console.error('地图初始化失败:', error);
-            const loadingOverlay = document.getElementById('loading-overlay');
-            loadingOverlay.innerHTML = `
-                <div class="text-red-600 text-center">
-                    <i class="fa fa-exclamation-triangle fa-3x mb-3"></i>
-                    <p>地图初始化失败：${error.message}</p>
-                    <button onclick="window.location.reload()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">刷新页面</button>
-                </div>
-            `;
-        }
-    };
-    </script>
+window.onload=initMap;
+</script>
 </body>
 </html>
