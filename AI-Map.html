@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>石家庄学术·伦理·法治 互动地图</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=X0m8PibfjI6CMfpgMyNc6vXrQrVivfXQ"></script>
+    <style>
+        html, body {height:100%;margin:0;padding:0;overflow:hidden;font-family:"Microsoft YaHei",sans-serif;}
+        #map-container {height:100vh;width:100%;z-index:1;position:relative;}
+        
+        .floating-panel{
+            position:absolute;
+            top:20px;
+            left:20px;
+            z-index:1000;
+            background:rgba(255,255,255,0.95);
+            border-radius:12px;
+            padding:20px;
+            width:280px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.15);
+            border:1px solid #e0e0e0;
+        }
+        
+        .story-panel{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            z-index:1000;
+            background:white;
+            border-radius:12px;
+            padding:0;
+            width:90%;
+            max-width:400px;
+            display:none;
+            box-shadow:0 8px 30px rgba(0,0,0,0.25);
+            border:1px solid #e0e0e0;
+        }
+        
+        .story-panel.active{
+            display:block;
+            animation:fadeIn 0.3s ease;
+        }
+        
+        .story-header{
+            background:linear-gradient(135deg, #4f6df5, #3a56e8);
+            color:white;
+            padding:20px;
+            border-radius:12px 12px 0 0;
+            position:relative;
+        }
+        
+        .story-counter{
+            position:absolute;
+            top:15px;
+            right:15px;
+            background:rgba(255,255,255,0.2);
+            padding:3px 10px;
+            border-radius:20px;
+            font-size:12px;
+        }
+        
+        .story-content{
+            padding:20px;
+        }
+        
+        .story-footer{
+            padding:15px 20px;
+            border-top:1px solid #f0f0f0;
+            display:flex;
+            justify-content:space-between;
+        }
+        
+        .btn{
+            padding:8px 16px;
+            border-radius:6px;
+            border:none;
+            cursor:pointer;
+            font-size:14px;
+            transition:all 0.3s;
+        }
+        
+        .btn-prev{
+            background:#f5f5f5;
+            color:#666;
+        }
+        
+        .btn-prev:hover{
+            background:#e8e8e8;
+        }
+        
+        .btn-next{
+            background:#4f6df5;
+            color:white;
+        }
+        
+        .btn-next:hover{
+            background:#3a56e8;
+        }
+        
+        .progress-bar{
+            height:4px;
+            background:#e0e0e0;
+            border-radius:2px;
+            margin:10px 0;
+            overflow:hidden;
+        }
+        
+        .progress{
+            height:100%;
+            background:#4f6df5;
+            border-radius:2px;
+            transition:width 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from {opacity:0; transform:translate(-50%,-45%);}
+            to {opacity:1; transform:translate(-50%,-50%);}
+        }
+        
+        .bubble{
+            background:white;
+            padding:8px 12px;
+            border-radius:20px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.1);
+            border:1px solid #e0e0e0;
+            font-size:12px;
+            max-width:150px;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+<div id="map-container"></div>
+
+<div class="floating-panel">
+    <h1 class="text-xl font-bold mb-3 text-gray-800">石家庄文化地图</h1>
+    <div class="category-filter mb-4">
+        <h2 class="font-semibold mb-2 text-gray-700">筛选维度</h2>
+        <div class="space-y-2">
+            <label class="flex items-center">
+                <input type="checkbox" class="category-checkbox mr-2" value="morality" checked>
+                <span class="text-sm">道德文化传承</span>
+            </label>
+            <label class="flex items-center">
+                <input type="checkbox" class="category-checkbox mr-2" value="rule" checked>
+                <span class="text-sm">法治建设实践</span>
+            </label>
+            <label class="flex items-center">
+                <input type="checkbox" class="category-checkbox mr-2" value="values" checked>
+                <span class="text-sm">核心价值观践行</span>
+            </label>
+            <label class="flex items-center">
+                <input type="checkbox" class="category-checkbox mr-2" value="culture" checked>
+                <span class="text-sm">特色文化传承</span>
+            </label>
+        </div>
+    </div>
+    <button id="story-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all flex items-center justify-center mt-4">
+        <i class="fa fa-map-signs mr-2"></i> 开启故事线
+    </button>
+</div>
+
+<div class="story-panel" id="story-panel">
+    <div class="story-header">
+        <div class="story-counter" id="story-counter">1/8</div>
+        <h2 class="text-xl font-bold" id="story-title">河北博物院</h2>
+        <div class="progress-bar mt-3">
+            <div class="progress" id="story-progress" style="width:12.5%"></div>
+        </div>
+    </div>
+    <div class="story-content">
+        <div class="text-gray-700 leading-relaxed" id="story-description">
+            河北博物院是河北省最大的综合性博物馆，收藏了大量珍贵文物，展示了河北地区从古至今的灿烂文化。
+        </div>
+        <div class="mt-3 text-sm text-gray-500">
+            <i class="fa fa-map-marker mr-1"></i>
+            <span id="story-address">河北省石家庄市长安区东大街4号</span>
+        </div>
+    </div>
+    <div class="story-footer">
+        <button id="prev-story" class="btn btn-prev">
+            <i class="fa fa-arrow-left mr-1"></i>上一站
+        </button>
+        <button id="next-story" class="btn btn-next">
+            下一站<i class="fa fa-arrow-right ml-1"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+// 石家庄重要文化地点数据
+const culturalSites = [
+    {
+        id: 1,
+        name: "河北博物院",
+        category: "culture",
+        location: {lat: 38.0503, lng: 114.5143},
+        address: "河北省石家庄市长安区东大街4号",
+        description: "河北博物院是河北省最大的综合性博物馆，收藏了大量珍贵文物，展示了河北地区从古至今的灿烂文化。",
+        storyOrder: 1
+    },
+    {
+        id: 2,
+        name: "正定古城",
+        category: "culture", 
+        location: {lat: 38.1478, lng: 114.5690},
+        address: "河北省石家庄市正定县",
+        description: "正定古城是国家历史文化名城，拥有1600多年历史，保存了大量历史建筑和文化遗迹。",
+        storyOrder: 2
+    },
+    {
+        id: 3,
+        name: "西柏坡纪念馆",
+        category: "values",
+        location: {lat: 38.3485, lng: 113.9275},
+        address: "河北省石家庄市平山县西柏坡镇",
+        description: "全国爱国主义教育示范基地，记录了中共中央在西柏坡的革命历史。",
+        storyOrder: 3
+    },
+    {
+        id: 4,
+        name: "赵州桥",
+        category: "culture",
+        location: {lat: 37.7511, lng: 114.7774},
+        address: "河北省石家庄市赵县",
+        description: "赵州桥建于隋朝，是世界桥梁史上的杰出创造，体现了中国古代工匠的高超技艺。",
+        storyOrder: 4
+    },
+    {
+        id: 5,
+        name: "石家庄市博物馆",
+        category: "culture",
+        location: {lat: 38.0569, lng: 114.4899},
+        address: "河北省石家庄市桥西区中华大街四中路3号",
+        description: "石家庄市博物馆是展示地方历史文化的重要窗口，通过展览展示石家庄的历史文化。",
+        storyOrder: 5
+    },
+    {
+        id: 6,
+        name: "石家庄解放纪念碑",
+        category: "values",
+        location: {lat: 38.0413, lng: 114.4785},
+        address: "河北省石家庄市长安区中山东路",
+        description: "石家庄解放纪念碑建于1948年，见证了石家庄的红色历史和解放历程。",
+        storyOrder: 6
+    },
+    {
+        id: 7,
+        name: "石家庄烈士陵园",
+        category: "values",
+        location: {lat: 38.0623, lng: 114.5110},
+        address: "河北省石家庄市长安区",
+        description: "缅怀革命烈士的纪念地，是进行爱国主义教育和革命传统教育的重要基地。",
+        storyOrder: 7
+    },
+    {
+        id: 8,
+        name: "河北师范大学",
+        category: "morality",
+        location: {lat: 38.0149, lng: 114.5299},
+        address: "河北省石家庄市裕华区",
+        description: "河北省重点高校，长期开展文明校园和社会主义核心价值观教育。",
+        storyOrder: 8
+    }
+];
+
+let map;
+let markers = [];
+let currentStoryIndex = 0;
+
+// 初始化地图
+function initMap() {
+    map = new BMapGL.Map("map-container");
+    
+    // 设置石家庄为中心点
+    const point = new BMapGL.Point(114.5149, 38.0423);
+    map.centerAndZoom(point, 12);
+    map.enableScrollWheelZoom(true);
+    
+    // 添加地图控件
+    map.addControl(new BMapGL.ZoomControl());
+    map.addControl(new BMapGL.ScaleControl());
+    
+    // 添加标注
+    addMarkers();
+}
+
+// 添加地图标注
+function addMarkers() {
+    culturalSites.forEach(site => {
+        const point = new BMapGL.Point(site.location.lng, site.location.lat);
+        
+        // 创建标注
+        const marker = new BMapGL.Marker(point);
+        map.addOverlay(marker);
+        
+        // 创建信息窗口
+        const infoWindow = new BMapGL.InfoWindow(`
+            <div style="padding:10px;max-width:250px">
+                <h3 style="margin:0 0 8px 0;font-weight:bold;">${site.name}</h3>
+                <p style="margin:0 0 5px 0;font-size:13px;">${site.description}</p>
+                <p style="margin:0;font-size:12px;color:#666;">${site.address}</p>
+            </div>
+        `, {width: 280});
+        
+        marker.addEventListener('click', () => {
+            map.openInfoWindow(infoWindow, point);
+        });
+        
+        markers.push(marker);
+    });
+}
+
+// 故事线功能
+const storySites = culturalSites.filter(site => site.storyOrder).sort((a, b) => a.storyOrder - b.storyOrder);
+
+document.getElementById('story-btn').addEventListener('click', function() {
+    document.getElementById('story-panel').classList.add('active');
+    showStoryPoint(0);
+});
+
+document.querySelector('.close-story')?.addEventListener('click', function() {
+    document.getElementById('story-panel').classList.remove('active');
+});
+
+document.getElementById('prev-story').addEventListener('click', function() {
+    if (currentStoryIndex > 0) {
+        showStoryPoint(currentStoryIndex - 1);
+    }
+});
+
+document.getElementById('next-story').addEventListener('click', function() {
+    if (currentStoryIndex < storySites.length - 1) {
+        showStoryPoint(currentStoryIndex + 1);
+    } else {
+        // 故事线结束
+        document.getElementById('story-panel').classList.remove('active');
+        alert('故事线已结束！感谢您了解石家庄的文化地标。');
+    }
+});
+
+function showStoryPoint(index) {
+    currentStoryIndex = index;
+    const site = storySites[index];
+    
+    // 更新故事面板内容
+    document.getElementById('story-title').textContent = site.name;
+    document.getElementById('story-description').textContent = site.description;
+    document.getElementById('story-address').textContent = site.address;
+    document.getElementById('story-counter').textContent = `${index + 1}/${storySites.length}`;
+    document.getElementById('story-progress').style.width = `${((index + 1) / storySites.length) * 100}%`;
+    
+    // 更新按钮状态
+    document.getElementById('prev-story').disabled = index === 0;
+    document.getElementById('next-story').textContent = index === storySites.length - 1 ? '完成' : '下一站';
+    
+    // 移动地图到该地点
+    const point = new BMapGL.Point(site.location.lng, site.location.lat);
+    map.panTo(point);
+    map.setZoom(15);
+}
+
+// 筛选功能
+document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const category = this.value;
+        const isChecked = this.checked;
+        
+        // 在实际应用中，这里应该根据类别显示/隐藏对应的标记
+        console.log(`类别 ${category} ${isChecked ? '显示' : '隐藏'}`);
+    });
+});
+
+// 页面加载完成后初始化地图
+window.onload = initMap;
+</script>
+</body>
+</html>
