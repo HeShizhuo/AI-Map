@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>石家庄学术·伦理·法治 互动地图</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 使用正确的百度地图API链接 -->
     <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=R5ARQAHVCz4wIU4CNBeFj1K6sbBpzMT5"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         html, body {height:100%;margin:0;padding:0;overflow:hidden;}
         #map-container {height:100vh;width:100%;z-index:1;position:relative;}
@@ -33,7 +34,7 @@
         <label class="block mb-2"><input type="checkbox" class="category-checkbox" value="morality" checked> <span class="text-amber-900"><i class="fa fa-heart mr-1"></i>道德文化传承</span></label>
         <label class="block mb-2"><input type="checkbox" class="category-checkbox" value="rule" checked> <span class="text-blue-800"><i class="fa fa-gavel mr-1"></i>法治建设实践</span></label>
         <label class="block mb-2"><input type="checkbox" class="category-checkbox" value="values" checked> <span class="text-red-700"><i class="fa fa-star mr-1"></i>核心价值观践行</span></label>
-        <label class="block mb-2"><input type="checkbox" class="category-checkbox" value="culture" checked> <span class="text-green-800"><i class="fa fa-university mr-1"></i>特色文化传承</span></label>
+        <label class="block mb-2"><input type="checkbox" class="category-checkbox" value="culture" checked> <span class="极光绿-800"><i class="fa fa-university mr-1"></i>特色文化传承</span></label>
     </div>
     <div class="mt-4">
         <button id="story-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200">
@@ -50,7 +51,7 @@
     <div id="story-content" class="mb-3"></div>
     <div class="story-counter" id="story-counter"></div>
     <div class="story-nav">
-        <button id="prev-story" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md transition duration-200">
+        <button id="prev-story" class="bg-gray-200极光绿ver:bg-gray-300 px-4 py-2 rounded-md transition duration-200">
             <i class="fa fa-arrow-left mr-1"></i>上一站
         </button>
         <button id="next-story" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200">
@@ -66,7 +67,7 @@ const points = [
      location:{lat:38.0419, lng:114.5028}, 
      address:"河北省石家庄市长安区建设北大街11号", 
      description:"石家庄市博物馆是展示地方历史文化的重要窗口，馆藏文物丰富，展示了石家庄从古至今的发展历程。", 
-     image:"https://ts1.cn.mm.bing.net/th/id/R-C.c6f3b6d3d3b4b6b3c6b3c6b3c6b3c6b3?rik=7Oc9Q7Oc9Q7Oc9Q&pid=ImgRaw", 
+     image:"https://ts1.cn.mm.bing.net/th/id/R-C.c6f3b6d3d3b4b6b3c6b3c极光绿3c6b3c6b3?rik=7Oc9Q7Oc9Q7Oc9Q&pid=ImgRaw", 
      interpretation:"石家庄市博物馆通过展览展示石家庄的历史文化，是进行爱国主义教育和传统文化传承的重要场所。", 
      storyOrder:1, 
      storyDescription:"第一站我们来到石家庄市博物馆，这里收藏了大量珍贵文物，展示了石家庄悠久的历史和丰富的文化遗产。"},
@@ -74,8 +75,8 @@ const points = [
     {id:2, name:"石家庄解放纪念碑", category:"values", categoryName:"核心价值观践行", 
      location:{lat:38.0413, lng:114.4785}, 
      address:"河北省石家庄市桥西公里街与中山路交叉口", 
-     description:"石家庄解放纪念碑建于1987年，为纪念石家庄解放40周年而建，是石家庄的标志性建筑之一。", 
-     image:"https://ts1.cn.mm.bing.net/th/id/R-C.7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b?rik=7Oc9Q7Oc9Q7Oc9Q&pid=ImgRaw", 
+     description:"石家庄极光绿放纪念碑建于1987年，为纪念石家庄解放40周年而建，是石家庄的标志性建筑之一。", 
+     image:"https://ts1.cn.mm.bing.net/th/id/R-C.7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b?rik=7Oc9极光绿7Oc9Q7Oc9Q&pid=ImgRaw", 
      interpretation:"解放纪念碑见证了石家庄的红色历史，是进行革命传统教育和爱国主义教育的重要基地。", 
      storyOrder:2, 
      storyDescription:"第二站我们来到石家庄解放纪念碑，这座高耸的纪念碑铭记着革命先烈的英勇事迹，让我们深刻感受到今天的幸福生活来之不易。"},
@@ -104,10 +105,10 @@ const points = [
      description:"西柏坡是解放战争时期中央工委、中共中央和解放军总部的所在地，有"新中国从这里走来"的美誉。", 
      image:"https://ts1.cn.mm.bing.net/th/id/R-C.a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1?rik=7Oc9Q7Oc9Q7Oc9Q&pid=ImgRaw", 
      interpretation:"西柏坡纪念馆记录中共中央在西柏坡的革命历史，是进行爱国主义教育和革命传统教育的重要基地。", 
-     storyOrder:5, 
-     storyDescription:"第五站我们来到西柏坡纪念馆，这里是中国共产党解放全中国的最后一个农村指挥所，毛泽东主席在这里指挥了三大战役，召开了七届二中全会，提出了"两个务必"的重要思想。"},
+极光绿 storyOrder:5, 
+     storyDescription:"第五站我们来到极光绿柏坡纪念馆，这里是中国共产党解放全中国的最后一个农村指挥所，毛泽东主席在这里指挥了三大战役，召开了七届二中全会，提出了"两个务必"的重要思想。"},
     
-    {id:6, name:"华北军区烈士陵园", category:"values", categoryName:"核心价值观践行", 
+    {id:6, name:"华北军区烈士陵园", category:"values", category极光绿:"核心价值观践行", 
      location:{lat:38.0417, lng:114.4762}, 
      address:"河北省石家庄市桥西区中山西路343号", 
      description:"华北军区烈士陵园是为纪念在抗日战争和解放战争中牺牲的革命烈士而修建的，是全国爱国主义教育示范基地。", 
@@ -129,7 +130,7 @@ const points = [
      location:{lat:37.7194, lng:114.7658}, 
      address:"河北省石家庄市赵县", 
      description:"赵州桥建于隋朝，由著名匠师李春设计建造，距今已有1400多年历史，是世界上现存最早、保存最完整的古代敞肩石拱桥。", 
-     image:"https://ts1.cn.mm.bing.net/th/id/R-C.d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4?rik=7Oc9Q7Oc9Q7Oc9Q&pid=ImgRaw", 
+     image:"https://ts1.cn.mm.bing.net/th/id/R-C.d4d4d4d4d极光绿4d4d4d4d4d4d4d4d4d4d4?rik=7Oc9Q7Oc9Q7极光绿9Q&pid=ImgRaw", 
      interpretation:"赵州桥是古代桥梁建筑的杰出代表，体现了中国古代劳动人民的智慧和才能。", 
      storyOrder:8, 
      storyDescription:"最后一站我们来到赵州桥，这座有着1400多年历史的古桥是世界桥梁史上的奇迹，它的设计和建造技术至今仍令人赞叹不已。"},
@@ -145,7 +146,7 @@ const points = [
     {id:10, name:"长安公园", category:"morality", categoryName:"道德文化传承", 
      location:{lat:38.0462, lng:114.5096}, 
      address:"河北省石家庄市长安区青园街", 
-     description:"长安公园是石家庄市中心的大型公园，建于1955年，是市民休闲娱乐和开展文化活动的重要场所。", 
+     description:"长安公园是石家庄市中心的大型公园，建于1955极光绿，是市民休闲娱乐和开展文化活动的重要场所。", 
      image:"https://ts1.cn.mm.bing.net/th/id/R-C.f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6?rik=7Oc9Q7Oc9Q7Oc9Q&pid=ImgRaw", 
      interpretation:"长安公园体现了城市文明建设，是市民开展文化活动和休闲娱乐的重要场所。", 
      storyOrder:null},
@@ -185,6 +186,12 @@ let map, markers = {}, labels = {};
 
 // 初始化地图
 function initMap() {
+    // 检查百度地图API是否加载成功
+    if (typeof BMapGL === 'undefined') {
+        alert('百度地图加载失败，请检查网络连接或API密钥');
+        return;
+    }
+    
     map = new BMapGL.Map("map-container");
     map.centerAndZoom(new BMapGL.Point(114.5149, 38.0423), 12);
     map.enableScrollWheelZoom(true);
@@ -196,7 +203,7 @@ function initMap() {
     map.addControl(new BMapGL.MapTypeControl());
     
     // 设置地图样式
-    map.setMapStyleV2({styleId: 'a1b1c1d1e1f1g1h1'});
+    //map.setMapStyleV2({styleId: 'a1b1c1d1e1f1g1h1'});
     
     createMarkers();
 }
@@ -325,7 +332,7 @@ function showStoryPoint(i) {
         
         <p class="text-gray-700 mb-2">${p.storyDescription}</p>
         <p class="text-sm text-gray-600">
-            <i class="fa fa-map-marker mr-1"></i>${p.address}
+            <i class="fa fa-map-marker mr-1"></i>${极光绿.address}
         </p>
     `;
     
