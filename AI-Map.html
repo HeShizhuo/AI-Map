@@ -131,6 +131,37 @@
             max-width:150px;
             text-align:center;
         }
+        /* 新增图片相关样式 */
+    #story-image-container {
+        transition: all 0.3s ease;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    #story-image {
+        transition: opacity 0.3s;
+    }
+    
+    #story-image.loading {
+        opacity: 0.3;
+    }
+    
+    /* 图片加载动画 */
+    @keyframes pulse {
+        0% { opacity: 0.6; }
+        50% { opacity: 0.3; }
+        100% { opacity: 0.6; }
+    }
+    
+    .loading-placeholder {
+        animation: pulse 1.5s infinite;
+        background: #f0f0f0;
+        height: 192px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+    }
     </style>
 </head>
 <body>
@@ -360,6 +391,21 @@ document.getElementById('next-story').addEventListener('click', function() {
 function showStoryPoint(index) {
     currentStoryIndex = index;
     const site = storySites[index];
+    
+    // 更新内容
+    document.getElementById('story-title').textContent = site.name;
+    document.getElementById('story-description').textContent = site.description;
+    document.getElementById('story-address').textContent = site.address;
+    
+    // 新增图片加载逻辑
+    const imgElement = document.getElementById('story-image');
+    if (site.imageUrl) {
+        imgElement.src = site.imageUrl;
+        imgElement.alt = site.name + "图片";
+        document.getElementById('story-image-container').classList.remove('hidden');
+    } else {
+        document.getElementById('story-image-container').classList.add('hidden');
+    }
     
     // 更新故事面板内容
     document.getElementById('story-title').textContent = site.name;
